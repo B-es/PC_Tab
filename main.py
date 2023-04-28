@@ -1,10 +1,11 @@
 import customtkinter as ctk
-from Note import Note
+from Note import CPU
 from curd import *
 
 
 class App(ctk.CTk):
     lables = []
+    cores = 18
     #Логика 
     def createLableFromTuple(self, item:tuple, master):
         s = str(item).replace(')','').replace('(','').replace('\'','')
@@ -20,38 +21,62 @@ class App(ctk.CTk):
         for item in mas:
             item.pack_forget()
         mas.clear()
-            
+        
+    def selectAndShowCPU(self, res, howm):
+        self.destroyMas(self.lables)
+        if(res == None): return
+        elif(type(res) == list):
+            for item in res:
+                self.insertToScrollTalbe(item)
+                if len(self.lables) == howm: break  
+        else:
+            self.insertToScrollTalbe(res)
     #Команды
     def onCores(self, value):
-        v = 0
         if value % 2 != 0: 
-            v = round(value)
-            if v % 2 != 0: v += 1
-        else: v = int(value)
-        self.coresCPU_lbl.configure(text = f"Кол-во ядер: {v}")
+            self.cores = round(value)
+            if self.cores % 2 != 0: self.cores += 1
+        else: self.cores = int(value)
+        self.coresCPU_lbl.configure(text = f"Кол-во ядер: {self.cores}")
         
-    def selectAllCPU(self):
+    def onselectAndShowCPU(self):
         if(self.howRows.get() == ''): return None
-        
-        self.destroyMas(self.lables)
-
-        res = selectCPU()
-        for item in res:
-            self.insertToScrollTalbe(item)
-            if len(self.lables) == int(self.howRows.get()): break
+        res = selectCPU(self.did.get())
+        self.selectAndShowCPU(res, int(self.howRows.get()))
             
-    def deleteNote(self):
-        deleteCPU(int(self.did.get()))
-        print(self.did.get())
-        self.selectAllCPU()
+    def ondeleteNote(self):
+        deleteCPU(self.did.get())
+        self.selectAndShowCPU(self.did.get())
+        
+    def onaddNote(self):
+        name = self.inputNameCpu.get()
+        freq = self.freqCPU.get()
+        cores = self.cores;
+        socket = self.socketCPU.get()
+        price = self.priceCPU.get()
+        integ = self.integCPU.get()
+        cpu = CPU(name, freq, cores, socket, price, integ)
+        id = addCPU(cpu.getData())
+        res = selectCPU(str(id))
+        self.selectAndShowCPU(res, 1)
+        
+    def onupdateNote(self):
+        name = self.inputNameCpu.get()
+        freq = self.freqCPU.get()
+        cores = self.cores;
+        socket = self.socketCPU.get()
+        price = self.priceCPU.get()
+        integ = self.integCPU.get()
+        cpu = CPU(name, freq, cores, socket, price, integ)
+        updateCPU(*cpu.getDataToUpdate(), int(self.did.get()))
+        res = selectCPU(self.did.get())
+        self.selectAndShowCPU(res, 1)
     
     def __init__(self):
         super().__init__()
         
-        self.note = Note()
-        
         #Общие настройки
-        self.geometry("500x800")
+        self.geometry("600x800")
         self.title("PC_Tab")
         self.resizable(False, False)
         ctk.set_default_color_theme("green")
@@ -59,32 +84,34 @@ class App(ctk.CTk):
         #Фреймы CPU
         self.frameCPU = ctk.CTkFrame(master=self, width=500, height=500, fg_color='transparent')
         self.rigthframeCPU = ctk.CTkFrame(master=self.frameCPU, width=250, height=500, fg_color='transparent')
-        self.leftframeCPU = ctk.CTkFrame(master=self.frameCPU, fg_color='transparent')
+        self.leftframeCPU = ctk.CTkFrame(master=self.frameCPU, fg_color='gray21')
         self.bottomframeCPU = ctk.CTkScrollableFrame(master=self, label_anchor='e')        
         
         self.frameCPU.pack(fill="x")
         self.rigthframeCPU.pack(side = 'right', expand=True)
-        self.leftframeCPU.pack(side="left", expand=True)
-        self.bottomframeCPU.pack(fill='both', pady=(10,0), expand=True)
+        self.leftframeCPU.pack(side="left", expand=True, fill='both')
+        self.bottomframeCPU.pack(fill='both', pady=(0,0), expand=True)
         
         #Кнопки - правый фрейм
-        self.addCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Добавить")
-        self.updateCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Обновить")
-        self.deleteCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Удалить", command=self.deleteNote)
-        self.showCPU = ctk.CTkButton(master=self.rigthframeCPU, text="Вывести все CPU", command=self.selectAllCPU)
+        self.menu = ctk.CTkOptionMenu(master=self.rigthframeCPU, values=["CPU", "Motherboard", "Stand"])
+        self.addCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Добавить", command=self.onaddNote)
+        self.updateCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Обновить", command=self.onupdateNote)
+        self.deleteCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Удалить", command=self.ondeleteNote)
+        self.showCPU = ctk.CTkButton(master=self.rigthframeCPU, text="Вывести", command=self.onselectAndShowCPU)
         self.howRows_lbl = ctk.CTkLabel(master=self.rigthframeCPU, text="Сколько вывести: ")
         self.howRows = ctk.CTkEntry(master=self.rigthframeCPU)
-        self.did_lbl = ctk.CTkLabel(master=self.rigthframeCPU, text="id для удаления: ")
+        self.did_lbl = ctk.CTkLabel(master=self.rigthframeCPU, text="id: ")
         self.did = ctk.CTkEntry(master=self.rigthframeCPU)
         
-        self.addCPU_btn.pack(pady=10)
-        self.updateCPU_btn.pack(pady=10)
-        self.deleteCPU_btn.pack(pady=10)
-        self.showCPU.pack(pady=10)
-        self.howRows_lbl.pack(pady=5)
-        self.howRows.pack(pady=10)
-        self.did_lbl.pack(pady=5)
-        self.did.pack(pady=10)
+        self.menu.pack(pady=(1,16))
+        self.addCPU_btn.pack(pady=2)
+        self.updateCPU_btn.pack(pady=2)
+        self.deleteCPU_btn.pack(pady=2)
+        self.showCPU.pack(pady=2)
+        self.howRows_lbl.pack(pady=(16,2))
+        self.howRows.pack(pady=2)
+        self.did_lbl.pack(pady=2)
+        self.did.pack(pady=2)
         
         #Ввод - левый фрейм
         self.inputNameCpu_lbl = ctk.CTkLabel(master=self.leftframeCPU, text="Название: ")
@@ -104,7 +131,7 @@ class App(ctk.CTk):
         self.priceCPU_lbl = ctk.CTkLabel(master=self.leftframeCPU, text="Цена: ")
         self.priceCPU = ctk.CTkEntry(master=self.leftframeCPU)
         
-        self.inputNameCpu_lbl.pack(pady=2)
+        self.inputNameCpu_lbl.pack(pady=(10,2))
         self.inputNameCpu.pack(pady=1)
         self.freqCPU_lbl.pack(pady=2)
         self.freqCPU.pack(pady=1)
@@ -114,7 +141,7 @@ class App(ctk.CTk):
         self.socketCPU.pack(pady=1)
         self.priceCPU_lbl.pack(pady=2)
         self.priceCPU.pack(pady=1)
-        self.integCPU.pack(pady=4)
+        self.integCPU.pack(pady=20)
        
         
         
