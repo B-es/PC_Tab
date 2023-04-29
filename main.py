@@ -46,7 +46,7 @@ class App(ctk.CTk):
             
     def ondeleteNote(self):
         deleteCPU(self.did.get())
-        self.selectAndShowCPU(self.did.get())
+        self.selectAndShowCPU(self.did.get(), 1)
         
     def onaddNote(self):
         name = self.inputNameCpu.get()
@@ -82,16 +82,17 @@ class App(ctk.CTk):
         ctk.set_default_color_theme("green")
         
         #Фреймы CPU
-        self.frameCPU = ctk.CTkFrame(master=self, width=500, height=500, fg_color='transparent')
-        self.rigthframeCPU = ctk.CTkFrame(master=self.frameCPU, width=250, height=500, fg_color='transparent')
-        self.leftframeCPU = ctk.CTkFrame(master=self.frameCPU, fg_color='gray21')
+        self.frame = ctk.CTkFrame(master=self, width=500, height=500, fg_color='transparent')
+        self.rigthframeCPU = ctk.CTkFrame(master=self.frame, width=250, height=500, fg_color='transparent')
+        self.leftframeCPU = ctk.CTkFrame(master=self.frame, fg_color='gray21')
+        self.leftframeS = ctk.CTkFrame(master=self.frame, fg_color='gray21')
         self.bottomframeCPU = ctk.CTkScrollableFrame(master=self, label_anchor='e')        
         
-        self.frameCPU.pack(fill="x")
+        self.frame.pack(fill="x")
         self.rigthframeCPU.pack(side = 'right', expand=True)
         self.leftframeCPU.pack(side="left", expand=True, fill='both')
         self.bottomframeCPU.pack(fill='both', pady=(0,0), expand=True)
-        
+
         #Кнопки - правый фрейм
         self.menu = ctk.CTkOptionMenu(master=self.rigthframeCPU, values=["CPU", "Motherboard", "Stand"])
         self.addCPU_btn = ctk.CTkButton(master=self.rigthframeCPU, text="Добавить", command=self.onaddNote)
@@ -113,7 +114,7 @@ class App(ctk.CTk):
         self.did_lbl.pack(pady=2)
         self.did.pack(pady=2)
         
-        #Ввод - левый фрейм
+        #Ввод - левый фрейм CPU
         self.inputNameCpu_lbl = ctk.CTkLabel(master=self.leftframeCPU, text="Название: ")
         self.inputNameCpu = ctk.CTkEntry(master=self.leftframeCPU)
         
@@ -142,8 +143,7 @@ class App(ctk.CTk):
         self.priceCPU_lbl.pack(pady=2)
         self.priceCPU.pack(pady=1)
         self.integCPU.pack(pady=20)
-       
-        
+
         
         
         
