@@ -37,7 +37,7 @@ def selectCPU(id:str):
         
 def deleteCPU(id:str):
     if(id.isdigit()):
-        return executesql(f'DELETE FROM "CPU" WHERE id = {int(id)};', 3)
+        return executesql(f'DELETE FROM "CPU" WHERE id = {int(id)} RETURNING *;', 1)
     else:
         return None
     
