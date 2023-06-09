@@ -128,7 +128,7 @@ def StandT():
 
 
 def MainWindow(Title:str):
-    icon = "B:\MeinCode\Py\PC_Tab\Service\Icon.ico"
+    icon = "Service\Icon.ico"
     dpg.create_context()
     dpg.create_viewport(title=Title, width=ViewPort_Width, height=ViewPort_Height, large_icon=icon, small_icon=icon)  
     dpg.setup_dearpygui()
