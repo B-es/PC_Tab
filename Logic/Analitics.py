@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 
-from CRUD import executesql
-from Services import showMB
+from Logic.CRUD import executesql
+from Service.Services import showMB
 
 
 def getCountModel(model:str, table:str) -> str:
@@ -27,4 +27,3 @@ def onGetDiff(id):
     table = dpg.get_item_user_data(id)
     res = getDiffBetweenChExp(table)
     showMB(f'Результат - {res}')
-    

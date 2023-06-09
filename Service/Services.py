@@ -1,6 +1,6 @@
 import dearpygui.dearpygui as dpg
 import math
-from spacing_using_auto_align import auto_align
+from Service.spacing_using_auto_align import auto_align
 
 #Сообщение
 def MessageBox():
@@ -168,3 +168,16 @@ def setDataToTable(rows:list, parent:str, columns:list, exc:int = 0) -> None:
             for i in range(length):
                 if i != exc:
                     dpg.add_text(str(rows[n][i]))
+                    
+def Theme():              
+    with dpg.theme() as global_theme:
+
+        with dpg.theme_component(dpg.mvAll):
+            dpg.add_theme_color(dpg.mvThemeCol_TabActive, (255, 0, 0), category=dpg.mvThemeCat_Core)
+            dpg.add_theme_color(dpg.mvThemeCol_TabHovered, (0, 113, 92), category=dpg.mvThemeCat_Core)
+            dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (255, 0, 0), category=dpg.mvThemeCat_Core)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (255, 255, 255, 84), category=dpg.mvThemeCat_Core)
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (255, 0, 0), category=dpg.mvThemeCat_Core)
+            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5, category=dpg.mvThemeCat_Core)
+
+    dpg.bind_theme(global_theme)

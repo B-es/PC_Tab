@@ -147,4 +147,3 @@ class Stand():
         goodcols = [value for value in cols if value != '']
         gooddata = [value for value in data if value != '']
         return (goodcols, gooddata)
-        

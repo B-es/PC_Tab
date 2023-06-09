@@ -1,8 +1,8 @@
 import dearpygui.dearpygui as dpg
 
-from CRUD import *
-from Note import Stand
-from Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
+from Logic.CRUD import *
+from Service.Note import Stand
+from Service.Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
 Standcolumns = ["Motherboard", "GPU", "CPU cooler", "CPU", "RAM"]
 idTableStand = "tablest"
@@ -31,7 +31,7 @@ def onUpdateStand():
     cols, vals = st.getDataToUpdate()
     id = dpg.get_value(selectid)
     
-    if id == '': return
+    if id == '' or id == 'all': return
     
     update(cols, vals, int(id))
     onSelectStand()

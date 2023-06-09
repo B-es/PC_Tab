@@ -33,4 +33,3 @@ def auto_align(item, alignment_type: int, x_align: float = 0.5, y_align: float =
                 dpg.add_item_visible_handler(callback=_center_v, user_data=[item, y_align])
 
         dpg.bind_item_handler_registry(item, dpg.last_container())
-

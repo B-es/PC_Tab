@@ -1,8 +1,8 @@
 import dearpygui.dearpygui as dpg
 
-from CRUD import *
-from Note import CPU
-from Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
+from Logic.CRUD import *
+from Service.Note import CPU
+from Service.Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
 CPUcolumns = ["Integrated graphics", "Frequence", "Number of cores", "Price", "Socket", "Name"]
 idTableCPU = "tablecpu"
@@ -31,7 +31,7 @@ def onUpdateCPU():
     cols, vals = cpu.getDataToUpdate()
     id = dpg.get_value(selectid)
     
-    if id == '': return
+    if id == '' or id == 'all': return
     
     update(cols, vals, int(id), table)
     onSelectCPU()
@@ -70,12 +70,3 @@ def getDataFromInputsCPU() -> CPU:
     
     cpu = CPU(name, freq, numcores, socket, price, integ)
     return cpu
-
-
-
-
-
-
-                    
-
-    

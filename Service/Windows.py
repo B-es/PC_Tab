@@ -1,11 +1,11 @@
 import dearpygui.dearpygui as dpg
 
-from Note import *
-from LogicCPU import *
-from LogicMB import *
-from LogicStand import *
-from Analitics import onGetCount, onGetDiff
-from Services import MessageBox, RussianLanguage, prepareTable
+from Service.Note import *
+from Logic.LogicCPU import *
+from Logic.LogicMB import *
+from Logic.LogicStand import *
+from Logic.Analitics import onGetCount, onGetDiff
+from Service.Services import MessageBox, RussianLanguage, prepareTable, Theme
 
 ViewPort_Width = 800
 ViewPort_Height = 700
@@ -55,7 +55,7 @@ def AnaliticButtons(actions):
             btns.append(dpg.add_button(label="Кол-во модели", user_data="CPU"))
             btns.append(dpg.add_button(label="Разница цен", user_data="CPU"))
             dpg.add_input_text(default_value='', tag="AnaliticInp", label="Модель", hint="Введите модель", height=input_height, 
-                                        width=input_width)
+                                        width=input_width+10)
     for i in range(len(btns)):
         dpg.set_item_callback(btns[i], actions[i])
         
@@ -127,11 +127,11 @@ def StandT():
         createTable(Standcolumns, "tablest")
 
 
-def MainWindow():
+def MainWindow(Title:str):
+    icon = "B:\MeinCode\Py\PC_Tab\Service\Icon.ico"
     dpg.create_context()
-    dpg.create_viewport(width=ViewPort_Width, height=ViewPort_Height)  
+    dpg.create_viewport(title=Title, width=ViewPort_Width, height=ViewPort_Height, large_icon=icon, small_icon=icon)  
     dpg.setup_dearpygui()
-    
     MessageBox()
     
     
@@ -143,10 +143,8 @@ def MainWindow():
 
     dpg.set_primary_window("Main", True)
     RussianLanguage()
-    
+    Theme()
     
     dpg.show_viewport()
     dpg.start_dearpygui()
     dpg.destroy_context()
-    
-MainWindow()

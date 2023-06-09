@@ -1,4 +1,4 @@
-import dearpygui.dearpygui as dpg
-from Note import CPU
-from CRUD import *
-from Windows import *
+from Service.Windows import MainWindow
+
+if __name__ == "__main__":  
+    MainWindow("PC_Tab") #779+12=791
