@@ -4,9 +4,10 @@ from Note import *
 from LogicCPU import *
 from LogicMB import *
 from LogicStand import *
+from Analitics import onGetCount, onGetDiff
 from Services import MessageBox, RussianLanguage, prepareTable
 
-ViewPort_Width = 600
+ViewPort_Width = 800
 ViewPort_Height = 700
 
 input_width = 100
@@ -15,7 +16,7 @@ input_height = 40
 ActionsCPU = [onAddCPU, onUpdateCPU, onDeleteCPU, onSelectCPU]
 ActionsMotherboard = [onAddMB, onUpdateMB, onDeleteMB, onSelectMB]
 ActionsStand = [onAddStand, onUpdateStand, onDeleteStand, onSelectStand]
-
+ActionsAnalitic = [onGetCount, onGetDiff]
 
 #Таблица
 def createTable(data, id):
@@ -34,11 +35,11 @@ def ActionButtons(actions, id):
     btns = []
     with dpg.child_window(width=100, height=200):
         with dpg.group():
-            btns.append(dpg.add_button(label="Добавить", callback=getDataFromInputsCPU))
+            btns.append(dpg.add_button(label="Добавить"))
             btns.append(dpg.add_button(label="Обновить"))
             btns.append(dpg.add_button(label="Удалить"))
             btns.append(dpg.add_button(label="Показать"))
-            t = dpg.add_input_text(tag=id, label="id", hint="Введите id", height=input_height, 
+            t = dpg.add_input_text(default_value='all', tag=id, label="id", hint="Введите id", height=input_height, 
                                         width=input_width)
             with dpg.tooltip(t):
                 dpg.add_text("add - все записи\nчисло - id")
@@ -46,10 +47,22 @@ def ActionButtons(actions, id):
     for i in range(len(btns)):
         dpg.set_item_callback(btns[i], actions[i])
 
+#Аналитические кнопки
+def AnaliticButtons(actions):
+    btns = []
+    with dpg.child_window(autosize_x=True, height=200):
+        with dpg.group():
+            btns.append(dpg.add_button(label="Кол-во модели", user_data="CPU"))
+            btns.append(dpg.add_button(label="Разница цен", user_data="CPU"))
+            dpg.add_input_text(default_value='', tag="AnaliticInp", label="Модель", hint="Введите модель", height=input_height, 
+                                        width=input_width)
+    for i in range(len(btns)):
+        dpg.set_item_callback(btns[i], actions[i])
+        
 #Тело CPU
 def inputCPU():
     
-    with dpg.child_window(autosize_x=True, height=200):
+    with dpg.child_window(width=400, height=200):
         with dpg.group(horizontal=True):
             with dpg.group():
                 dpg.add_input_text(tag='namecpu', label="Название", hint="Введите", height=input_height, 
@@ -94,6 +107,7 @@ def CPUT():
         with dpg.group(horizontal=True):
             ActionButtons(ActionsCPU, 'selectidcpu')
             inputCPU()
+            AnaliticButtons(ActionsAnalitic)
         createTable(CPUcolumns, "tablecpu")
 
 #Таб с материнскими платами    

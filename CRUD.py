@@ -60,4 +60,4 @@ def update(columns:list, values:list, id:int, table:str):
     podsql = podsql.removesuffix(',')
     print(cols)
     sql = f'UPDATE "{table}" SET {podsql} WHERE id = {id};'
-    #executesql(sql, 3)
+    executesql(sql, 3)

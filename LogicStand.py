@@ -4,11 +4,11 @@ from CRUD import *
 from Note import Stand
 from Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
-Standcolumns = ["id Motherboard", "id GPU", "id CPU cooler", "id CPU", "id RAM"]
+Standcolumns = ["Motherboard", "GPU", "CPU cooler", "CPU", "RAM"]
 idTableStand = "tablest"
-table = "Stand"
+table = "stands"
 selectid = "selectidst"
-exc = 0
+exc = -1
 
 def onAddStand():
     st = getDataFromInputsSt()
