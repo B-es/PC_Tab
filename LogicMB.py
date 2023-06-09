@@ -1,31 +1,71 @@
 import dearpygui.dearpygui as dpg
-import math
 
 from CRUD import *
 from Note import Motherboard
+from Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
 MBcolumns = ["Price", "Name", "Socket", "Form-factor", "Chipset"]
-
-def m(value):
-    return int(math.fabs(value))
+idTableMB = "tablemb"
+table = "Motherboard"
+selectid = "selectidmb"
+exc = 5
 
 def onAddMB():
-    pass
+    mb = getDataFromInputsMB()
+    count = len(mb.checkBadData())
+    isFull = not bool(count)
+    id = 0
+    if(isFull):
+        id = add(mb.getData(), table, MBcolumns)
+        
+        data = None
+        data = select(str(id), table)
+        if data == None: return
+        
+        setDataToTableOne(data, idTableMB, MBcolumns, exc)
+    else:
+        showMB()
 
 def onUpdateMB():
-    pass
+    mb = getDataFromInputsMB()
+    cols, vals = mb.getDataToUpdate()
+    id = dpg.get_value(selectid)
+    
+    if id == '': return
+    
+    update(cols, vals, int(id))
+    onSelectMB()
 
 def onDeleteMB():
-    pass
+    id = dpg.get_value(selectid)
+    if id == '': return
+    
+    res = None
+    res = deleteCPU(id, table)
+    if res == None: return
+    
+    showMB(f"Запись: {res} была удалена.")
+    clearTable(idTableMB, MBcolumns)
 
 def onSelectMB():
-    pass
+    id = dpg.get_value(selectid)
+    if id == '': return
+    
+    res = None
+    res = select(id, table)
+    if res == None: return
+    
+    if id == 'all':
+        setDataToTable(res, idTableMB, MBcolumns, exc)
+    else:
+        setDataToTableOne(res, idTableMB, MBcolumns, exc)
 
 def getDataFromInputsMB():
     name = dpg.get_value('namemb')
     socket = dpg.get_value('socketmb')
-    form_factor = m(dpg.get_value('form_factormb'))
+    form_factor = dpg.get_value('form_factormb')
     chipset = dpg.get_value('chipsetmb')
     price = m(dpg.get_value('pricemb'))
 
     mb = Motherboard(name, socket, form_factor, chipset, price)
+    return mb

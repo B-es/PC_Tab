@@ -67,7 +67,7 @@ class Motherboard():
         if socket != '': self.socket = socket
         if form_factor != '': self.form_factor = form_factor
         if chipset != '': self.chipset = chipset
-        if price.isdigit(): self.price = int(price)
+        self.price = price
     
         
     def getData(self):
@@ -84,6 +84,55 @@ class Motherboard():
         if self.form_factor == 'None':
             baddata.append(3)
         if self.chipset == 'None':
+            baddata.append(4)
+    
+        return baddata
+    
+    def getDataToUpdate(self):
+        baddata = self.checkBadData()
+        data = self.getData()
+        cols = self.columns.copy()
+        for i in baddata:
+            cols[i] = ''
+            data[i] = ''
+        goodcols = [value for value in cols if value != '']
+        gooddata = [value for value in data if value != '']
+        return (goodcols, gooddata)
+        
+        
+class Stand():
+    idmb = 0
+    idgpu = 0
+    idcpuc = 0
+    idcpu = 0
+    idram = 0
+    columns = ["id Motherboard", "id GPU", "id CPU cooler", "id CPU", "id RAM"]
+    
+    def __init__(self, idmb, idgpu, idcpuc, idcpu, idram):
+        self.setData(idmb, idgpu, idcpuc, idcpu, idram)
+    
+    def setData(self, idmb, idgpu, idcpuc, idcpu, idram):
+        self.idmb = idmb
+        self.idgpu = idgpu
+        self.idcpuc = idcpuc
+        self.idcpu = idcpu
+        self.idram = idram
+        
+    
+    def getData(self):
+        return [self.idmb, self.idgpu, self.idcpuc, self.idcpu, self.idram]
+
+    def checkBadData(self):
+        baddata = []
+        if self.idmb == 0:
+            baddata.append(0)
+        if self.idgpu == 0:
+            baddata.append(1)
+        if self.idcpuc == 0:
+            baddata.append(2)
+        if self.idcpu == 0:
+            baddata.append(3)
+        if self.idram == 0:
             baddata.append(4)
     
         return baddata

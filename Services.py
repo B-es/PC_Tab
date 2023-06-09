@@ -1,4 +1,5 @@
 import dearpygui.dearpygui as dpg
+import math
 from spacing_using_auto_align import auto_align
 
 #Сообщение
@@ -123,9 +124,47 @@ def Codes():
     dpg.add_char_remap(0x00DF, 0x042F)
     dpg.add_char_remap(0x00FF, 0x044F)
     
-    
-    
-    
-    
-    
-    
+def m(value):
+    return int(math.fabs(value))
+
+#Заполнить таблицу
+def prepareTable(columns, parent=''):
+    dpg.add_table_column(label="Номер", parent=parent)
+    for column in columns:
+        dpg.add_table_column(label=column, parent=parent)
+
+def clearTable(parent, columns):
+    """Отчищает таблицу\n
+    parent - id таблицы\n
+    columns - название столбцов"""
+    dpg.delete_item(parent, children_only=True)
+    prepareTable(columns, parent)
+
+def setDataToTableOne(row:tuple, parent:str, columns:list, exc:int = 0) -> None:
+    """Добавляет одну запись в таблицу\n
+    row - Строка\n
+    parent - id таблицы\n
+    columns - название столбцов\n"""
+    length = len(row)
+    clearTable(parent, columns)
+    if length == 0: return
+    with dpg.table_row(parent=parent):
+        dpg.add_text("1")
+        for i in range(length):
+            if i != exc:
+                dpg.add_text(str(row[i]))
+
+def setDataToTable(rows:list, parent:str, columns:list, exc:int = 0) -> None:
+    """Добавляет записи в таблицу\n
+    rows - Строки\n
+    parent - id таблицы\n
+    columns - название столбцов\n"""
+    length = len(rows[0])
+    if length == 0: return
+    clearTable(parent, columns)
+    for n in range(len(rows)):
+        with dpg.table_row(parent=parent):
+            dpg.add_text(str(n+1))
+            for i in range(length):
+                if i != exc:
+                    dpg.add_text(str(rows[n][i]))

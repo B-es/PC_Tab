@@ -1,15 +1,14 @@
 import dearpygui.dearpygui as dpg
-import math
 
 from CRUD import *
 from Note import CPU
-from Services import showMB
+from Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
 CPUcolumns = ["Integrated graphics", "Frequence", "Number of cores", "Price", "Socket", "Name"]
-
-
-def m(value):
-    return int(math.fabs(value))
+idTableCPU = "tablecpu"
+table = "CPU"
+selectid = "selectidcpu"
+exc = 5
 
 def onAddCPU():
     cpu = getDataFromInputsCPU()
@@ -17,37 +16,49 @@ def onAddCPU():
     isFull = not bool(count)
     id = 0
     if(isFull):
-        id = addCPU(cpu.getData())
-        setDataToTableCPUOne(id)
+        id = add(cpu.getData(), table, CPUcolumns)
+        
+        data = None
+        data = select(str(id), table)
+        if data == None: return
+        
+        setDataToTableOne(data, idTableCPU, CPUcolumns, exc)
     else:
         showMB()
     
 def onUpdateCPU():
     cpu = getDataFromInputsCPU()
     cols, vals = cpu.getDataToUpdate()
-    id = dpg.get_value('selectidcpu')
+    id = dpg.get_value(selectid)
     
     if id == '': return
     
-    updateCPU(cols, vals, int(id))
+    update(cols, vals, int(id), table)
     onSelectCPU()
 
 def onDeleteCPU():
-    id = dpg.get_value('selectidcpu')
-    res = deleteCPU(id)
-    
+    id = dpg.get_value(selectid)
     if id == '': return
+    
+    res = None
+    res = deleteCPU(id, table)
+    if res == None: return
     
     showMB(f"Запись: {res} была удалена.")
-    clearTable()
+    clearTable(idTableCPU, CPUcolumns)
 
 def onSelectCPU():
-    id = dpg.get_value('selectidcpu')
-    
+    id = dpg.get_value(selectid)
     if id == '': return
     
-    res = selectCPU(id)
-    setDataToTableCPU(res)
+    res = None
+    res = select(id, table)
+    if res == None: return
+    
+    if id == 'all':
+        setDataToTable(res, idTableCPU, CPUcolumns, exc)
+    else:
+        setDataToTableOne(res, idTableCPU, CPUcolumns, exc)
 
 def getDataFromInputsCPU() -> CPU:
     name = dpg.get_value('namecpu')
@@ -60,30 +71,11 @@ def getDataFromInputsCPU() -> CPU:
     cpu = CPU(name, freq, numcores, socket, price, integ)
     return cpu
 
-#Заполнить таблицу
-def prepareTable(columns, parent=''):
-    for column in columns:
-        dpg.add_table_column(label=column, parent=parent)
 
-def setDataToTableCPU(rows) -> None:
-    
-    clearTable()
-    for row in rows:
-        with dpg.table_row(parent="tablecpu"):
-            for i in range(len(row)):
-                if i != len(row) - 3:
-                    dpg.add_text(str(row[i]))
 
-def setDataToTableCPUOne(row) -> None:
-   
-    clearTable()
-    with dpg.table_row(parent="tablecpu"):
-            for i in range(len(row)):
-                print(row)
-                if i != len(row) - 3:
-                    dpg.add_text(str(row[i]))
+
+
+
                     
-def clearTable():
-    dpg.delete_item("tablecpu", children_only=True)
-    prepareTable(CPUcolumns, 'tablecpu')
+
     

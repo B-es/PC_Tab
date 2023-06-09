@@ -4,7 +4,7 @@ from Note import *
 from LogicCPU import *
 from LogicMB import *
 from LogicStand import *
-from Services import MessageBox, RussianLanguage
+from Services import MessageBox, RussianLanguage, prepareTable
 
 ViewPort_Width = 600
 ViewPort_Height = 700
@@ -13,7 +13,8 @@ input_width = 100
 input_height = 40
 
 ActionsCPU = [onAddCPU, onUpdateCPU, onDeleteCPU, onSelectCPU]
-ActionsMotherboard = ['', '', '', '']
+ActionsMotherboard = [onAddMB, onUpdateMB, onDeleteMB, onSelectMB]
+ActionsStand = [onAddStand, onUpdateStand, onDeleteStand, onSelectStand]
 
 
 #Таблица
@@ -107,7 +108,7 @@ def MotherboardT():
 def StandT():
     with dpg.tab(label="Stand"):
         with dpg.group(horizontal=True):
-            ActionButtons(ActionsMotherboard, 'selectidSt')
+            ActionButtons(ActionsStand, 'selectidst')
             inputStand()
         createTable(Standcolumns, "tablest")
 
