@@ -4,9 +4,11 @@ from Logic.CRUD import *
 from Service.Note import Stand
 from Service.Services import showMB, m, setDataToTable, setDataToTableOne, clearTable
 
-Standcolumns = ["Motherboard", "GPU", "CPU cooler", "CPU", "RAM"]
+Standcolumns = ["id Motherboard", "id GPU", "id CPU cooler", "id CPU", "id RAM"]
+StandcolumnsView = ["Motherboard", "GPU", "CPU cooler", "CPU", "RAM"]
 idTableStand = "tablest"
-table = "stands"
+tableView = "stands"
+table = "Stand"
 selectid = "selectidst"
 exc = -1
 
@@ -20,6 +22,7 @@ def onAddStand():
         
         data = None
         data = select(str(id), table)
+        print(data, id)
         if data == None: return
         
         setDataToTableOne(data, idTableStand, Standcolumns, exc)
@@ -52,13 +55,13 @@ def onSelectStand():
     if id == '': return
     
     res = None
-    res = select(id, table)
+    res = select(id, tableView)
     if res == None: return
     
     if id == 'all':
-        setDataToTable(res, idTableStand, Standcolumns, exc)
+        setDataToTable(res, idTableStand, StandcolumnsView, exc)
     else:
-        setDataToTableOne(res, idTableStand, Standcolumns, exc)
+        setDataToTableOne(res, idTableStand, StandcolumnsView, exc)
 
 def getDataFromInputsSt():
     idmb = m(dpg.get_value('idMb'))
